@@ -21,7 +21,7 @@ export class CreatingPriceList {
         this.delete = page.getByRole('button', { name: 'Удалить' });
     }
 
-    async withoutDeletion(): Promise<void> {
+    async noDeletionPriceList(): Promise<void> {
         try {
 
             await this.page.waitForSelector('text="Редактор цен"');
@@ -39,20 +39,20 @@ export class CreatingPriceList {
                 await this.confirmation.click();
 
             } else {
-                await this.withDeletion(); // Если элемент не активен, переход ко второму сценарию
+                await this.deletionPricelist(); // Если элемент не активен, переход ко второму сценарию
             }
 
         } catch (error) {
             console.error('Ошибка:', error);
-            await this.withDeletion();
+            await this.deletionPricelist();
         }
     }
-    async withDeletion(): Promise<void> { // удаление
+    async deletionPricelist(): Promise<void> { // удаление
 
         await this.cancellation.click();
         await this.modalWindow.click();
         await this.delete.click();
-        await this.withoutDeletion(); // Повторный запуск первого сценария после удаления
+        await this.noDeletionPriceList(); // Повторный запуск первого сценария после удаления
     }
 }
 

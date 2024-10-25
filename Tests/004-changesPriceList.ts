@@ -2,8 +2,8 @@ import { Page, Locator } from '@playwright/test'
 export class ChangesPriceList {
 
     page: Page
-    shahmatkaSelect: Locator
-    shahmatkaPlus: Locator
+    chessSelect: Locator
+    chessPlus: Locator
     oneFloor: Locator
     changePrice_1: Locator
     value_1: Locator
@@ -43,8 +43,8 @@ export class ChangesPriceList {
     constructor(page) {
 
         this.page = page;
-        this.shahmatkaSelect = page.getByLabel('Шахматка [object Object]');
-        this.shahmatkaPlus = page.getByRole('option', { name: 'Шахматка+' });
+        this.chessSelect = page.getByLabel('Шахматка [object Object]');
+        this.chessPlus = page.getByRole('option', { name: 'Шахматка+' });
         this.oneFloor = page.locator('span').filter({ hasText: /^1$/ }).nth(1);
         this.changePrice_1 = page.getByRole('button', { name: 'Изменить цену' });
         this.value_1 = page.getByPlaceholder('Укажите значение');
@@ -83,8 +83,8 @@ export class ChangesPriceList {
 
     }
     async switchToChess(): Promise<void> {
-        await this.shahmatkaSelect.click()
-        await this.shahmatkaPlus.click()
+        await this.chessSelect.click()
+        await this.chessPlus.click()
     }
     async oneFloor_(): Promise<void> {
         await this.oneFloor.click()

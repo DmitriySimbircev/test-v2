@@ -30,7 +30,7 @@ test('Редактор цен', async ({ page }) => {
     await login.login()
 
     const selectionAndEditing = new CreatingPriceList(page)
-    await selectionAndEditing.withoutDeletion()
+    await selectionAndEditing.noDeletionPriceList()
 
     const filtration = new Filtration(page);
     const filteringAssertion = await filtration.filters();
