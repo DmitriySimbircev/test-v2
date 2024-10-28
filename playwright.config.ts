@@ -16,7 +16,7 @@ export default defineConfig({
 
   use: {
     video: 'off',
-    launchOptions: { slowMo: 900 },
+    launchOptions: { slowMo: 800 },
     trace: 'retain-on-failure',
   },
 

@@ -82,17 +82,17 @@ export class ChangesPriceList {
         this.apply_5 = page.getByRole('button', { name: 'Изменить', exact: true });
 
     }
-    async switchToChess(): Promise<void> {
+    async switchToChess(): Promise<void> { // переход на Ш+
         await this.chessSelect.click()
         await this.chessPlus.click()
     }
-    async oneFloor_(): Promise<void> {
+    async oneFloor_(): Promise<void> { // изменение цены на 1 этаже
         await this.oneFloor.click()
         await this.changePrice_1.click()
         await this.value_1.fill('10000')
         await this.apply_1.click()
     }
-    async twoFloor_(): Promise<void> {
+    async twoFloor_(): Promise<void> { // изменение цены на 2 этаже
         await this.twoFloor_1.click()
         await this.twoFloor_2.click()
         await this.changePrice_2.click()
@@ -101,8 +101,8 @@ export class ChangesPriceList {
         await this.decrease_1.click()
         await this.apply_2.click()
     }
-    async threeFloor_(): Promise<void> {
-        await this.page.waitForTimeout(1000)
+    async threeFloor_(): Promise<void> { // изменение цены на 3 этаже
+        await this.page.waitForTimeout(1200)
         await this.threeFloor.click()
         await this.changePrice_3.click()
         await this.replaceSelect_2.click()
@@ -110,8 +110,8 @@ export class ChangesPriceList {
         await this.value_3.fill('555555')
         await this.apply_3.click()
     }
-    async fourFloor_(): Promise<void> {
-        await this.page.waitForTimeout(1000)
+    async fourFloor_(): Promise<void> { // изменение цены на 4 этаже
+        await this.page.waitForTimeout(1200)
         await this.fourFloor.click()
         await this.changePrice_4.click()
         await this.procentSelect_1.click()
@@ -119,8 +119,8 @@ export class ChangesPriceList {
         await this.value_4.fill('5')
         await this.apply_4.click()
     }
-    async fiveFloor_(): Promise<void> {
-        await this.page.waitForTimeout(1000)
+    async fiveFloor_(): Promise<void> { // изменение цены на 5 этаже
+        await this.page.waitForTimeout(1200)
         await this.fiveFloor.click()
         await this.changePrice_5.click()
         await this.decreaseSelect.click()

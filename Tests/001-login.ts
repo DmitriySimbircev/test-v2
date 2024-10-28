@@ -14,10 +14,10 @@ export class LoginPage {
         this.password = page.getByLabel('Пароль')
         this.loginButton = page.getByRole('button', { name: 'Войти' })
     }
-    async gotoLoginPage(): Promise<void> {
+    async gotoLoginPage(): Promise<void> { // переход на страницу авторизации
         await this.page.goto(process.env.BASE_URL as string)
     }
-    async login(): Promise<void> {
+    async login(): Promise<void> { // ввод кредов
         await this.username.fill(process.env.LOGIN as string);
         await this.password.fill(process.env.PASSWORD as string);
         await this.loginButton.click()

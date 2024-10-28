@@ -16,19 +16,19 @@ export class PublicationPriceList {
         this.choice = page.locator('[data-index="14836386"]')
         this.toDraftList = page.getByRole('link', { name: 'Редакторе цен.' })
     }
-    async verification_1(): Promise<void> {
+    async publishedPage(): Promise<void> { // переход на вкладку опубликовано и открытие прайс листа 
         await this.published.click()
         await this.project.click()
     }
-    async verification_2(): Promise<void> {
-        await expect(this.successAllert).toHaveText('Изменения цен успешно опубликованы'); // проверка надичия текса в аллерте успеха
+    async successAlert(): Promise<void> { // проверка надичия текса в аллерте успеха (по сути, проверка наличия алерта)
+        await expect(this.successAllert).toHaveText('Изменения цен успешно опубликованы'); 
     }
 
-    async verification_3(): Promise<Locator> {
+    async checChess(): Promise<Locator> { // проверка что на шахматке отмечены помещения с измененной ценой
         return this.choice;
     }
 
-    async verification_4(): Promise<void> {
+    async followLinkInAlert(): Promise<void> { // переход по ссылки в аллерте на вкладку в работе 
         await this.toDraftList.click()
     }
 }

@@ -31,9 +31,9 @@ export class CreatingPriceList {
             await this.newPrices.click();
             
 
-            const isProjectSelectionEnabled = await this.projectSelection.isEnabled(); // смотрим что ЖК активен и его можно выбрать
+            const isProjectSelectionEnabled = await this.projectSelection.isEnabled(); 
 
-            if (isProjectSelectionEnabled) {
+            if (isProjectSelectionEnabled) { // смотрим что ЖК активен и его можно выбрать
                 await this.projectSelection.click();
                 await this.page.waitForSelector('button:has-text("Редактировать цены")');
                 await this.confirmation.click();
@@ -42,12 +42,12 @@ export class CreatingPriceList {
                 await this.deletionPricelist(); // Если элемент не активен, переход ко второму сценарию
             }
 
-        } catch (error) {
+        } catch (error) { 
             console.error('Ошибка:', error);
             await this.deletionPricelist();
         }
     }
-    async deletionPricelist(): Promise<void> { // удаление
+    async deletionPricelist(): Promise<void> { // функция удаления черновика 
 
         await this.cancellation.click();
         await this.modalWindow.click();

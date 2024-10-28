@@ -18,14 +18,14 @@ export class CheckPriceList {
 
         this.allert = page.getByRole('button', { name: 'Убрать' });
     }
-    async check(): Promise<void> {
+    async check(): Promise<void> { // проходя каждый локатор, (каждый этаж) сверяем что пересчет цены был верным
         await this.choice_1.click()
         await this.choice_2.click()
         await this.choice_3.click()
         await this.choice_4.click()
         await this.choice_5.click()
     }
-    async allertReselection(): Promise<void> {
+    async allertReselection(): Promise<void> { // закрытие аллерта о повторном выборе помещений 
         await this.allert.click()
     }
 }

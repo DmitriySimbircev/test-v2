@@ -39,17 +39,25 @@ export class ListOfChanges {
     this.apply = page.getByRole('button', { name: 'Изменить' })
     this.publication = page.getByRole('button', { name: 'Опубликовать' })
   }
-  async changesList(): Promise<void> {
+  async changelogPage(): Promise<void> { // переход на страницу изменений
     await this.changes.click()
+  }
+  async selectionApartments(): Promise<void> { // точечно выбираем помещения
     await this.room_1.click()
     await this.room_2.click()
     await this.room_3.click()
     await this.room_4.click()
     await this.room_5.click()
     await this.room_6.click()
+  }
+  async deletionApartmens(): Promise<void> { // удаляем выбранные помещения
     await this.deletion.click()
+  }
+   async selectEntirePage(): Promise<void> { // после удаления выбираем чекбоксом всю старницу
     await this.page.waitForTimeout(2000)
     await this.pageSelection.click()
+   }
+   async replacementPrice(): Promise<void> { // делаем перерасчет ранее измененных помещений
     await this.editPrice.click()
     await this.replaceSelect.click()
     await this.replace.click()
@@ -57,7 +65,7 @@ export class ListOfChanges {
     await this.value_2.fill('5000000')
     await this.apply.click()
   }
-  async publicationPrice(): Promise<void> {
+  async publicationPrice(): Promise<void> { // публикум прайс
     await this.publication.click()
   }
 

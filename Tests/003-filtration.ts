@@ -33,27 +33,34 @@ export class Filtration {
 
     }
 
-    async filters(): Promise<Locator> {
-        await this.page.waitForSelector('text="Фильтры"'); // ждем локатор "фильтры"
+    async filters(): Promise<void> { // переход к фильтрам
+        await this.page.waitForSelector('text="Фильтры"'); 
         await this.goToFilter.click();
+    }
+    async floorSelection(): Promise<void> { // выбор этажа
         await this.floorsFrom.fill('с 1');
-        await this.floorsTo.fill('по 1');
+        await this.floorsTo.fill('по 1'); 
+    }
+    async roomSelection(): Promise<void> { // выбор комнатности
         await this.selectRoominess.click();
-        await this.choiceRoominess.click();
+        await this.choiceRoominess.click(); 
+    }
+    async statusSelection(): Promise<void> { // выбор статуса
         await this.selectStatus.click();
-        await this.choiseStatus.click();
+        await this.choiseStatus.click(); 
         await this.application_1.click();
-        await this.page.waitForSelector('[data-index="14836376"]');
+    }
+    async checkChess(): Promise<Locator> { // проверка фильтрации на Ш
+        await this.page.waitForSelector('[data-index="14836376"]'); 
         return this.filteringAssertion;
     }
-    async resetFiltering(): Promise<void> {
+    async resetFiltering(): Promise<void> { // сброс фильтрации
         await this.reset1.click();
         await this.reset2.click();
         await this.application_2.click();
     }
     
 }
-
 /* 
 Проверка работы фильтра на шахматке
 */

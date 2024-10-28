@@ -15,8 +15,8 @@ import { PublicationPriceList } from './007-publicationPriceList'
 4. Переход на шахматку и проверка цен
 5. Переход в список изменений, часть удаляется, часть редактируется, и изменяется цена на первичные значения.
 6. Публикация и проверка 
-Что сделать:
-1.1 Добавить создание ЖК и дома что бы не быть привязаным к дому 
+Что сделать в будущем:
+1.1 Добавить создание ЖК и дома что бы не быть привязаным к дому и стенду
 1.2 Добавить проверки крит. изменения цены и изменение баз. стоимости
 1.3 На подходе кастомные фильтры
 */
@@ -25,17 +25,21 @@ test('Редактор цен', async ({ page }) => {
 
     test.setTimeout(180000);
 
-    const login = new LoginPage(page)
+    const login = new LoginPage(page) // 001 авторизация
     await login.gotoLoginPage()
     await login.login()
 
-    const selectionAndEditing = new CreatingPriceList(page)
+    const selectionAndEditing = new CreatingPriceList(page) // 002 создание черновика 
     await selectionAndEditing.noDeletionPriceList()
 
-    const filtration = new Filtration(page);
-    const filteringAssertion = await filtration.filters();
-    await expect(filteringAssertion).toHaveAttribute('data-filtered', 'true'); // Проверка фильтрации на шахматке
-    await filtration.resetFiltering()
+    const filtration = new Filtration(page) // 003 проверка фильтрации на шахматке
+    await filtration.filters()
+    await filtration.floorSelection()
+    await filtration.roomSelection()
+    await filtration.statusSelection()
+    const filteringAssertion = await filtration.checkChess(); 
+    await expect(filteringAssertion).toHaveAttribute('data-filtered', 'true'); 
+    await filtration.resetFiltering();
 
     const selectionOfPremises = new ChangesPriceList(page)
     await selectionOfPremises.switchToChess()
@@ -49,17 +53,21 @@ test('Редактор цен', async ({ page }) => {
     await priceCheck.check()
     await priceCheck.allertReselection()
 
-    const listOfChanges = new ListOfChanges(page)
-    await listOfChanges.changesList()
+    const listOfChanges = new ListOfChanges(page) // 006 действия на странице списка изменений 
+    await listOfChanges.changelogPage()
+    await listOfChanges.selectionApartments()
+    await listOfChanges.deletionApartmens()
+    await listOfChanges.selectEntirePage()
+    await listOfChanges.replacementPrice()
     await listOfChanges.publicationPrice()
 
     const publicationVerification = new PublicationPriceList(page)
-    await publicationVerification.verification_1()
-    await publicationVerification.verification_2()
-    await publicationVerification.verification_3()
+    await publicationVerification.publishedPage()
+    await publicationVerification.successAlert()
+    await publicationVerification.checChess()
 
-    const choice = await publicationVerification.verification_3()
+    const choice = await publicationVerification.checChess()
     await expect(choice).toHaveAttribute('data-selected', 'true') // проверка что помещения отмечены на шахматке 
-    await publicationVerification.verification_4()
+    await publicationVerification.followLinkInAlert()
 
 })
