@@ -41,7 +41,7 @@ test('Редактор цен', async ({ page }) => {
     await expect(filteringAssertion).toHaveAttribute('data-filtered', 'true'); 
     await filtration.resetFiltering();
 
-    const selectionOfPremises = new ChangesPriceList(page)
+    const selectionOfPremises = new ChangesPriceList(page) // 004 изменение цен на Ш+
     await selectionOfPremises.switchToChess()
     await selectionOfPremises.oneFloor_()
     await selectionOfPremises.twoFloor_()
@@ -49,7 +49,7 @@ test('Редактор цен', async ({ page }) => {
     await selectionOfPremises.fourFloor_()
     await selectionOfPremises.fiveFloor_()
 
-    const priceCheck = new CheckPriceList(page)
+    const priceCheck = new CheckPriceList(page) // 005 проверка пересчета цены на Ш+
     await priceCheck.check()
     await priceCheck.allertReselection()
 
@@ -61,13 +61,13 @@ test('Редактор цен', async ({ page }) => {
     await listOfChanges.replacementPrice()
     await listOfChanges.publicationPrice()
 
-    const publicationVerification = new PublicationPriceList(page)
+    const publicationVerification = new PublicationPriceList(page) // 007 вкладка опубликовано, проверка публикации
     await publicationVerification.publishedPage()
     await publicationVerification.successAlert()
     await publicationVerification.checChess()
 
     const choice = await publicationVerification.checChess()
-    await expect(choice).toHaveAttribute('data-selected', 'true') // проверка что помещения отмечены на шахматке 
+    await expect(choice).toHaveAttribute('data-selected', 'true') 
     await publicationVerification.followLinkInAlert()
 
 })
