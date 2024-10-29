@@ -1,11 +1,10 @@
 import { Page, Locator, expect } from '@playwright/test'
 export class PublicationPriceList {
-
-    page: Page
+     page: Page
     published: Locator
     project: Locator
     successAllert: Locator
-    choice: Locator
+    public choice: Locator
     toDraftList: Locator
 
     constructor(page) {

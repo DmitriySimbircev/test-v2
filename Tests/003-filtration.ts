@@ -18,12 +18,12 @@ export class Filtration {
     constructor(page) {
         this.page = page;
         this.goToFilter = page.getByRole('button', { name: 'Фильтры' });
-        this.floorsFrom = page.getByPlaceholder('с ');
-        this.floorsTo = page.getByPlaceholder('по ');
-        this.selectRoominess = page.locator('pb-multiselect:nth-child(2) > label > tui-multi-select > tui-hosted-dropdown > div > .t-input > .t-hosted > div > div > div > .t-wrapper > .t-absolute-wrapper');
-        this.choiceRoominess = page.getByRole('option', { name: '3' });
-        this.selectStatus = page.locator('pb-multiselect:nth-child(6) > label > tui-multi-select > tui-hosted-dropdown > div > .t-input > .t-hosted > div > div > div > .t-wrapper > .t-absolute-wrapper');
-        this.choiseStatus = page.getByRole('option', { name: 'Свободно' });
+        this.floorsFrom = page.getByPlaceholder('с '); // плохой локатор
+        this.floorsTo = page.getByPlaceholder('по '); // плохой локатор
+        this.selectRoominess = page.locator('pb-multiselect:nth-child(2) > label > tui-multi-select > tui-hosted-dropdown > div > .t-input > .t-hosted > div > div > div > .t-wrapper > .t-absolute-wrapper'); // плохой локатор
+        this.choiceRoominess = page.getByRole('option', { name: '3' }); // хардкод
+        this.selectStatus = page.locator('pb-multiselect:nth-child(6) > label > tui-multi-select > tui-hosted-dropdown > div > .t-input > .t-hosted > div > div > div > .t-wrapper > .t-absolute-wrapper'); // плохой локатор
+        this.choiseStatus = page.getByRole('option', { name: 'Свободно' }); // плохое название
         this.application_1 = page.getByRole('button', { name: 'Применить' });
         this.reset1 = page.getByRole('button', { name: 'Фильтры' });
         this.reset2 = page.getByRole('button', { name: 'Сбросить' });
