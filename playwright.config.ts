@@ -8,7 +8,7 @@ dotenv.config();
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  testDir: './Tests',
+  testDir: './src/price-editor/tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   workers: process.env.CI ? 1 : undefined,
@@ -16,7 +16,7 @@ export default defineConfig({
 
   use: {
     video: 'off',
-    launchOptions: { slowMo: 800 },
+    //launchOptions: { slowMo: 800 },
     trace: 'retain-on-failure',
   },
 

@@ -8,8 +8,8 @@
       "skipLibCheck": true,
       "moduleResolution": "node",
       "outDir": "./dist",
-      "rootDir": "./src"
+      
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "src/price-editor/page-object"],
     "exclude": ["node_modules"]
   }
