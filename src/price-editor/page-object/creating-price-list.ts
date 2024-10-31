@@ -21,28 +21,25 @@ export class CreatingPriceListPage {
         this.deleteButton = page.getByRole('button', { name: 'Удалить' });
     }
 
-    async creationPriceList(): Promise<void> {
-        await this.priceEditorButton.waitFor();
+    async createPriceList(): Promise<void> {
+
         await this.priceEditorButton.click();
-        await this.newPricesButton.waitFor();
+        await this.page.waitForTimeout(2500) // костыль связаный с багом (не могу обыграть его ни waitForLoadState ни waitForResponse)
         await this.newPricesButton.click();
 
-        const isProjectSelectionEnabled = await this.projectSelection.isEnabled();
-
-        if (isProjectSelectionEnabled) { // Проверяем, доступен ли ЖК для выбора
+        // Проверяем доступность выбора проекта
+        if (await this.projectSelection.isEnabled()) {
             await this.projectSelection.click();
-            await this.confirmButton.waitFor();
             await this.confirmButton.click();
         } else {
-            await this.deletionPricelist(); // Если элемент задезейблен, переходим к удалению
+            await this.deletePricelist();
         }
     }
 
-    async deletionPricelist(): Promise<void> { // Функция удаления черновика (deletionPricelist - удалениеПрайсЛиста)
+    async deletePricelist(): Promise<void> {
         await this.cancelButton.click();
         await this.modalWindow.click();
         await this.deleteButton.click();
-        await this.creationPriceList(); // Создание нового после удаления, для дальнейшей работы 
+        await this.createPriceList(); // Переходим снова к созданию после удаления
     }
 }
-

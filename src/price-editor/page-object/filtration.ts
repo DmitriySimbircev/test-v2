@@ -15,12 +15,12 @@ export class FiltrationPage {
 
     constructor(page: Page) {
         this.page = page;
-        this.filterButton = page.getByRole('button', { name: 'Фильтры' });
-        this.floorsFrom = page.locator('input [id="tui_191730289167372"]');
-        this.floorsTo = page.locator('input [id="tui_201730289167372"]');
-        this.selectRoominess = page.locator('pb-multiselect:nth-child(2) > label > tui-multi-select > tui-hosted-dropdown > div > .t-input > .t-hosted > div > div > div > .t-wrapper > .t-absolute-wrapper');
+        this.filterButton = page.locator('button.ng-star-inserted:has-text("Фильтры")');
+        this.floorsFrom = page.locator('input[placeholder="с "]');
+        this.floorsTo = page.locator('input[placeholder="по "]');
+        this.selectRoominess = page.locator('pb-multiselect:nth-child(2) > label > tui-multi-select > tui-hosted-dropdown > div > .t-input > .t-hosted > div > div > div');
         this.choiceRoominess = page.getByRole('option', { name: '3' });
-        this.selectStatus = page.locator('pb-multiselect:nth-child(6) > label > tui-multi-select > tui-hosted-dropdown > div > .t-input > .t-hosted > div > div > div > .t-wrapper > .t-absolute-wrapper');
+        this.selectStatus = page.locator('pb-multiselect:nth-child(6) > label > tui-multi-select > tui-hosted-dropdown > div > .t-input > .t-hosted > div > div > div');
         this.choiseStatus = page.getByRole('option', { name: 'Свободно' });
         this.applicationButton = page.getByRole('button', { name: 'Применить' });
         this.resetButton = page.getByRole('button', { name: 'Сбросить' });
@@ -30,7 +30,6 @@ export class FiltrationPage {
     }
 
     async clickfilterButton(): Promise<void> { // переход к фильтрам
-        await this.filterButton.waitFor(); 
         await this.filterButton.click();
     }
     async choiceOfFloor(): Promise<void> { // выбор этажа

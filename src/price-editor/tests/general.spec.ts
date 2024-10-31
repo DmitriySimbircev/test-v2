@@ -23,14 +23,14 @@ import { PublicationPriceListPage } from '../page-object/publication-price-list'
 
 test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ page }) => {
 
-    test.slow();
+    //test.slow();
 
     const loginPage: LoginPage = new LoginPage(page) // 001 авторизация
     await loginPage.open()
     await loginPage.login()
 
     const creatingPriceListPage: CreatingPriceListPage = new CreatingPriceListPage(page) // 002 создание черновика 
-    await creatingPriceListPage.creationPriceList()
+    await creatingPriceListPage.createPriceList()
 
     const filtrationPage: FiltrationPage = new FiltrationPage(page) // 003 проверка фильтрации на шахматке
     await filtrationPage.clickfilterButton()
@@ -62,11 +62,9 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
     await listOfChangesPage.publicationPrice()
 
     const publicationPriceListPage: PublicationPriceListPage = new PublicationPriceListPage(page) // 007 вкладка опубликовано, проверка публикации
-    
+    await publicationPriceListPage.publishedPage();
     const successAlert = await publicationPriceListPage.checkSuccessAlert()
     await expect(successAlert).toHaveText('Изменения цен успешно опубликованы')
-    await publicationPriceListPage.publishedPage();
-   
     const choice = publicationPriceListPage.choice
     await expect(choice).toHaveAttribute('data-selected', 'true') 
     await publicationPriceListPage.followLinkInAlert()
