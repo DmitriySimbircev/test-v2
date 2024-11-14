@@ -20,5 +20,7 @@ export class LoginPage {
         await this.username.fill(process.env.LOGIN!);
         await this.password.fill(process.env.PASSWORD!);
         await this.loginButton.click()
+        await this.page.waitForLoadState()
     }
+
 }

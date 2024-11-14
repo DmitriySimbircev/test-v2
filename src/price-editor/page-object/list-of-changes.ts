@@ -51,11 +51,11 @@ export class ListOfChangesPage {
   async deletionApartmens(): Promise<void> { // удаляем выбранные помещения
     await this.deleteButton.click()
   }
-   async selectEntirePage(): Promise<void> { // после удаления выбираем чекбоксом всю старницу
-    await this.pageSelection.waitFor()
+  async selectEntirePage(): Promise<void> { // после удаления выбираем чекбоксом всю старницу
+    await this.page.waitForLoadState('domcontentloaded')
     await this.pageSelection.click()
-   }
-   async replacementPrice(): Promise<void> { // делаем перерасчет ранее измененных помещений
+  }
+  async replacementPrice(): Promise<void> { // делаем перерасчет ранее измененных помещений
     await this.editPriceButton.click()
     await this.replaceSelect.click()
     await this.replace.click()

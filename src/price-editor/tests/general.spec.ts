@@ -1,6 +1,6 @@
 import { test, expect, Locator } from '@playwright/test'
 import { LoginPage } from '../page-object/login-page'
-import { CreatingPriceListPage} from '../page-object/creating-price-list'
+import { CreatingPriceListPage } from '../page-object/creating-price-list'
 import { FiltrationPage } from '../page-object/filtration'
 import { ChangesPriceListPage } from '../page-object/changes-price-list'
 import { CheckPriceListPage } from '../page-object/check-price-list'
@@ -23,37 +23,38 @@ import { PublicationPriceListPage } from '../page-object/publication-price-list'
 
 test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ page }) => {
 
-    //test.slow();
+    test.slow();
 
-    const loginPage: LoginPage = new LoginPage(page) // 001 авторизация
+    const loginPage: LoginPage = new LoginPage(page) //авторизация
     await loginPage.open()
     await loginPage.login()
 
-    const creatingPriceListPage: CreatingPriceListPage = new CreatingPriceListPage(page) // 002 создание черновика 
+    const creatingPriceListPage: CreatingPriceListPage = new CreatingPriceListPage(page) //создание черновика 
     await creatingPriceListPage.createPriceList()
 
-    const filtrationPage: FiltrationPage = new FiltrationPage(page) // 003 проверка фильтрации на шахматке
+    const filtrationPage: FiltrationPage = new FiltrationPage(page) //проверка фильтрации на шахматке
     await filtrationPage.clickfilterButton()
     await filtrationPage.choiceOfFloor()
     await filtrationPage.choiceOfRoom()
     await filtrationPage.choiceStatus()
     const filteringAssertion: Locator = await filtrationPage.checkFilterChess()
-    await expect(filteringAssertion).toHaveAttribute('data-filtered', 'true') 
+    await expect(filteringAssertion).toHaveAttribute('data-filtered', 'true')
     await filtrationPage.resetFilter()
 
-    const changesPriceListPage: ChangesPriceListPage = new ChangesPriceListPage(page) // 004 изменение цен на Ш+
-    await changesPriceListPage.switchToChess()
-    await changesPriceListPage.changesOneFloor_()
-    await changesPriceListPage.changesTwoFloor_()
-    await changesPriceListPage.changesThreeFloor_()
-    await changesPriceListPage.changesFourFloor_()
-    await changesPriceListPage.changesFiveFloor_()
+    const changesPriceListPage = new ChangesPriceListPage(page); // changes-price-list
 
-    const checkPriceListPage: CheckPriceListPage = new CheckPriceListPage(page) // 005 проверка пересчета цены на Ш+
+    await changesPriceListPage.switchToChess();
+    await changesPriceListPage.changePriceOnFloor(1, '10000','Увеличить');
+    await changesPriceListPage.changePriceOnFloor(2, '10000', 'Уменьшить', '₽');
+    await changesPriceListPage.changePriceOnFloor(3, '555555', 'Заменить');
+    await changesPriceListPage.changePriceOnFloor(4, '5', 'Увеличить', '%');
+    await changesPriceListPage.changePriceOnFloor(5, '5', 'Уменьшить', '%');
+
+    const checkPriceListPage: CheckPriceListPage = new CheckPriceListPage(page) //проверка пересчета цены на Ш+
     await checkPriceListPage.checkResult()
     await checkPriceListPage.checkAllertReselection()
 
-    const listOfChangesPage: ListOfChangesPage = new ListOfChangesPage(page) // 006 действия на странице списка изменений 
+    const listOfChangesPage: ListOfChangesPage = new ListOfChangesPage(page) //действия на странице списка изменений 
     await listOfChangesPage.changesPage()
     await listOfChangesPage.choiceApartments()
     await listOfChangesPage.deletionApartmens()
@@ -61,12 +62,11 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
     await listOfChangesPage.replacementPrice()
     await listOfChangesPage.publicationPrice()
 
-    const publicationPriceListPage: PublicationPriceListPage = new PublicationPriceListPage(page) // 007 вкладка опубликовано, проверка публикации
+    const publicationPriceListPage: PublicationPriceListPage = new PublicationPriceListPage(page) //вкладка опубликовано, проверка публикации
     await publicationPriceListPage.publishedPage();
     const successAlert = await publicationPriceListPage.checkSuccessAlert()
     await expect(successAlert).toHaveText('Изменения цен успешно опубликованы')
     const choice = publicationPriceListPage.choice
-    await expect(choice).toHaveAttribute('data-selected', 'true') 
+    await expect(choice).toHaveAttribute('data-selected', 'true')
     await publicationPriceListPage.followLinkInAlert()
-
 })
