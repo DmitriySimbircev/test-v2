@@ -25,14 +25,14 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
 
     test.slow();
 
-    const loginPage: LoginPage = new LoginPage(page) //авторизация
+    const loginPage: LoginPage = new LoginPage(page) 
     await loginPage.open()
     await loginPage.login()
 
-    const creatingPriceListPage: CreatingPriceListPage = new CreatingPriceListPage(page) //создание черновика 
+    const creatingPriceListPage: CreatingPriceListPage = new CreatingPriceListPage(page) 
     await creatingPriceListPage.createPriceList()
 
-    const filtrationPage: FiltrationPage = new FiltrationPage(page) //проверка фильтрации на шахматке
+    const filtrationPage: FiltrationPage = new FiltrationPage(page) 
     await filtrationPage.clickfilterButton()
     await filtrationPage.choiceOfFloor()
     await filtrationPage.choiceOfRoom()
@@ -41,7 +41,7 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
     await expect(filteringAssertion).toHaveAttribute('data-filtered', 'true')
     await filtrationPage.resetFilter()
 
-    const changesPriceListPage = new ChangesPriceListPage(page); // changes-price-list
+    const changesPriceListPage = new ChangesPriceListPage(page); 
 
     await changesPriceListPage.switchToChess();
     await changesPriceListPage.changePriceOnFloor(1, '10000','Увеличить');
@@ -50,11 +50,11 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
     await changesPriceListPage.changePriceOnFloor(4, '5', 'Увеличить', '%');
     await changesPriceListPage.changePriceOnFloor(5, '5', 'Уменьшить', '%');
 
-    const checkPriceListPage: CheckPriceListPage = new CheckPriceListPage(page) //проверка пересчета цены на Ш+
+    const checkPriceListPage: CheckPriceListPage = new CheckPriceListPage(page) 
     await checkPriceListPage.checkResult()
     await checkPriceListPage.checkAllertReselection()
 
-    const listOfChangesPage: ListOfChangesPage = new ListOfChangesPage(page) //действия на странице списка изменений 
+    const listOfChangesPage: ListOfChangesPage = new ListOfChangesPage(page) 
     await listOfChangesPage.changesPage()
     await listOfChangesPage.choiceApartments()
     await listOfChangesPage.deletionApartmens()
@@ -62,7 +62,7 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
     await listOfChangesPage.replacementPrice()
     await listOfChangesPage.publicationPrice()
 
-    const publicationPriceListPage: PublicationPriceListPage = new PublicationPriceListPage(page) //вкладка опубликовано, проверка публикации
+    const publicationPriceListPage: PublicationPriceListPage = new PublicationPriceListPage(page) 
     await publicationPriceListPage.publishedPage();
     const successAlert = await publicationPriceListPage.checkSuccessAlert()
     await expect(successAlert).toHaveText('Изменения цен успешно опубликованы')

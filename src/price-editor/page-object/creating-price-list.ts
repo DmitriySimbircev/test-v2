@@ -24,14 +24,15 @@ export class CreatingPriceListPage {
     async createPriceList(): Promise<void> {
 
         await this.priceEditorButton.click();
-        await this.page.waitForTimeout(2500) // костыль связаный с багом (не могу обыграть его ни waitForLoadState ни waitForResponse)
+        await this.page.waitForResponse(response => response.url().includes('/api/v4/json/house'))
         await this.newPricesButton.click();
 
         // Проверяем доступность выбора проекта
         if (await this.projectSelection.isEnabled()) {
             await this.projectSelection.click();
             await this.confirmButton.click();
-        } else {
+        } 
+        else {
             await this.deletePricelist();
         }
     }

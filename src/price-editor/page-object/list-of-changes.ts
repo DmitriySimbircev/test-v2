@@ -50,6 +50,11 @@ export class ListOfChangesPage {
   }
   async deletionApartmens(): Promise<void> { // удаляем выбранные помещения
     await this.deleteButton.click()
+    
+    await this.page.waitForResponse(response =>
+      response.url().includes('/price-recalculation/api/price-lists/') && response.url().includes('houseId')
+    );
+  
   }
   async selectEntirePage(): Promise<void> { // после удаления выбираем чекбоксом всю старницу
     await this.page.waitForLoadState('domcontentloaded')

@@ -47,8 +47,10 @@ export class ChangesPriceListPage {
             await this.clickSelect.click();
             await this.replace.click();
         }
+
         else if (action === 'Увеличить') {
         }
+
         else {
             await this.clickSelect.click();
             await this.decrease.click();
@@ -59,8 +61,13 @@ export class ChangesPriceListPage {
 
         await this.value.fill(value);
         await this.apply.click();
+
+        await this.page.waitForResponse(response =>
+            response.url().includes('/price-recalculation/api/price-lists/') &&
+            response.url().includes('/houses'));
+
         await this.sidePage.waitFor({ state: 'detached' });
-         
+
     }
 }
 
