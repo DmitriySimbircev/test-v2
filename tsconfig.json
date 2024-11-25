@@ -7,9 +7,9 @@
       "esModuleInterop": true,
       "skipLibCheck": true,
       "moduleResolution": "node",
-      "outDir": "./dist",
+      "outDir": "./dist", // лишнее
       
     },
-    "include": ["src/**/*", "src/price-editor/page-object"],
+    "include": ["src/**/*", "src/price-editor/page-object"], // почему отдельно пэджи?
     "exclude": ["node_modules"]
   }

@@ -29,18 +29,18 @@ export class ListOfChangesPage {
     this.fiveRoom = page.getByLabel('Этаж 2, кв. 6 5 000 000→4 990')
     this.sixRoom = page.getByLabel('Этаж 3, кв. 7 5 000 000→555')
     this.deleteButton = page.getByRole('button', { name: 'Удалить' })
-    this.pageSelection = page.getByLabel('Страница')
+    this.pageSelection = page.getByLabel('Страница') // по названию не понятно, что это
     this.editPriceButton = page.getByRole('button', { name: 'Редактировать цену' })
-    this.replaceSelect = page.getByLabel('Как изменяем Увеличить up')
+    this.replaceSelect = page.getByLabel('Как изменяем Увеличить up') // у этого и следующего локатора названия неговорящие(
     this.replace = page.getByRole('option', { name: 'Заменить' })
     this.value = page.getByPlaceholder('Укажите значение')
     this.changeButton = page.getByRole('button', { name: 'Изменить' })
     this.publicationButton = page.getByRole('button', { name: 'Опубликовать' })
   }
-  async changesPage(): Promise<void> { // переход на страницу изменений
+  async changesPage(): Promise<void> { // переход на страницу изменений - глагол!
     await this.changesButton.click()
   }
-  async choiceApartments(): Promise<void> { // точечно выбираем помещения
+  async choiceApartments(): Promise<void> { // точечно выбираем помещения - универсальная функция должна быть
     await this.oneRoom.click()
     await this.twoRoom.click()
     await this.threRoom.click()
@@ -48,7 +48,7 @@ export class ListOfChangesPage {
     await this.fiveRoom.click()
     await this.sixRoom.click()
   }
-  async deletionApartmens(): Promise<void> { // удаляем выбранные помещения
+  async deletionApartmens(): Promise<void> { // удаляем выбранные помещения - глагол!
     await this.deleteButton.click()
     
     await this.page.waitForResponse(response =>
@@ -60,15 +60,15 @@ export class ListOfChangesPage {
     await this.page.waitForLoadState('domcontentloaded')
     await this.pageSelection.click()
   }
-  async replacementPrice(): Promise<void> { // делаем перерасчет ранее измененных помещений
+  async replacementPrice(): Promise<void> { // делаем перерасчет ранее измененных помещений, ГЛАГОЛ!
     await this.editPriceButton.click()
     await this.replaceSelect.click()
     await this.replace.click()
-    await this.value.click()
-    await this.value.fill('5000000')
+    await this.value.click() // зачем сначала click, а потом fill?
+    await this.value.fill('5000000') // хардкод
     await this.changeButton.click()
   }
-  async publicationPrice(): Promise<void> { // публикум прайс
+  async publicationPrice(): Promise<void> { // публикум прайс - глагол!!!
     await this.publicationButton.click()
   }
 

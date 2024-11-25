@@ -1,6 +1,6 @@
 import { Page, Locator } from '@playwright/test'
 export class CheckPriceListPage {
-    page: Page
+    page: Page // модификатор
     public choiceOneFloor: Locator
     public choiceTwoFloor: Locator
     public choiceThreeFloor: Locator
@@ -10,7 +10,7 @@ export class CheckPriceListPage {
     constructor(page: Page) {
         this.page = page;
 
-        this.choiceOneFloor = page.getByText('+ 10 000 (0.2%)').first();
+        this.choiceOneFloor = page.getByText('+ 10 000 (0.2%)').first(); // хардкод
         this.choiceTwoFloor = page.getByText('-10 000 (-0.2%)').first();
         this.choiceThreeFloor = page.getByText('-4 444 445 (-88.89%)').first();
         this.choiceFourFloor = page.getByText('+ 250 000 (5%)').first();
@@ -18,14 +18,14 @@ export class CheckPriceListPage {
         this.closeButton = page.getByRole('button', { name: 'Убрать' });
     }
     async checkResult(): Promise<void> { // проходя каждый локатор, (каждый этаж) сверяем что пересчет цены был верным
-        await this.choiceOneFloor.click()
+        await this.choiceOneFloor.click() // а в чем проверка?
         await this.choiceTwoFloor.click()
         await this.choiceThreeFloor.click()
         await this.choiceFourFloor.click()
         await this.choiceFiveFloor.click()
     }
     async checkAllertReselection(): Promise<void> { // закрытие аллерта о повторном выборе помещений 
-        await this.closeButton.click()
+        await this.closeButton.click() 
     }
 }
 /* 
