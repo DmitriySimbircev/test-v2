@@ -8,17 +8,17 @@ dotenv.config();
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  testDir: './Tests', // рекомендую название файлов и папок писать в kebabc-case. Считай, что рекомендация носит ультимативный характер
+  testDir: './src/price-editor/tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  reporter: [['html', { outputFolder: 'artifacts' }]],
 
   use: {
     baseURL: 'https://pb4999.core-t2.profitbase.pro/new',
     video: 'off',
-    launchOptions: { slowMo: 800 }, // убери слоумо, вместе можем посмотреть где падает и поправить локаьно там, а не замедлять весь тестовый проект
-    trace: 'retain-on-failure',
+    //launchOptions: { slowMo: 700 },
+    trace: 'on',
   },
 
   projects: [
