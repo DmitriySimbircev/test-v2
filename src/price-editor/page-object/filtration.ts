@@ -1,61 +1,65 @@
-import { Page, Locator } from '@playwright/test'
-export class FiltrationPage {
+import { Page, Locator } from '@playwright/test';
 
-    public page: Page
-    public filterButton: Locator
-    public floorsFrom: Locator
-    public floorsTo: Locator
-    public selectRoominess: Locator
-    public choiceRoominess: Locator
-    public selectStatus: Locator
-    public choiseStatus: Locator
-    public applicationButton: Locator
-    public resetButton: Locator
-    public filteringAssertion: Locator
+export class FiltrationPage {
+    public page: Page;
+    public filterButton: Locator;
+    public floorsFrom: Locator;
+    public floorsTo: Locator;
+    public selectRoominess: Locator;
+    public selectStatus: Locator;
+    public applicationButton: Locator;
+    public resetButton: Locator;
+    public filteringAssertion: Locator;
 
     constructor(page: Page) {
         this.page = page;
-        this.filterButton = page.locator('button.ng-star-inserted:has-text("Фильтры")');
-        this.floorsFrom = page.locator('input[placeholder="с "]');
-        this.floorsTo = page.locator('input[placeholder="по "]');
-        this.selectRoominess = page.locator('pb-multiselect:nth-child(2) > label > tui-multi-select > tui-hosted-dropdown > div > .t-input > .t-hosted > div > div > div');
-        this.choiceRoominess = page.getByRole('option', { name: '3' });
-        this.selectStatus = page.locator('pb-multiselect:nth-child(6) > label > tui-multi-select > tui-hosted-dropdown > div > .t-input > .t-hosted > div > div > div');
-        this.choiseStatus = page.getByRole('option', { name: 'Свободно' });
+        this.filterButton = page.getByRole('button', { name: 'Фильтры' });
+        this.floorsFrom = page.getByPlaceholder('с ');
+        this.floorsTo = page.getByPlaceholder('по ');
+        this.selectRoominess = page.locator('pb-multiselect:nth-child(2) label tui-multi-select');
+        this.selectStatus = page.locator('pb-multiselect:nth-child(6) label tui-multi-select');
         this.applicationButton = page.getByRole('button', { name: 'Применить' });
         this.resetButton = page.getByRole('button', { name: 'Сбросить' });
         this.filteringAssertion = page.locator('[data-index="14836376"]');
-        
-
     }
 
-    async clickfilterButton(): Promise<void> { // переход к фильтрам
+    async openFiltering(): Promise<void> {
+        await this.clickFilterButton();
+    }
+
+    private async clickFilterButton(): Promise<void> {
         await this.filterButton.click();
     }
-    async choiceOfFloor(): Promise<void> { // выбор этажа
-        await this.floorsFrom.fill('1');
-        await this.floorsTo.fill('1'); 
+
+    async chooseFloor({ from, to }: { from: string; to: string }): Promise<void> {
+        await this.floorsFrom.fill(from);
+        await this.floorsTo.fill(to);
     }
-    async choiceOfRoom(): Promise<void> { // выбор комнатности
+
+    async chooseRoom(roomNumber: string): Promise<void> {
         await this.selectRoominess.click();
-        await this.choiceRoominess.click(); 
+        const roomOption = this.page.getByRole('option', { name: roomNumber });
+        await roomOption.click();
     }
-    async choiceStatus(): Promise<void> { // выбор статуса
+
+    async chooseStatus(status: string): Promise<void> {
         await this.selectStatus.click();
-        await this.choiseStatus.click(); 
+        const statusOption = this.page.getByRole('option', { name: status });
+        await statusOption.click();
         await this.applicationButton.click();
+        await this.page.waitForResponse(response =>
+            response.url().includes('/api/v4/json/property'));
     }
-    async checkFilterChess(): Promise<Locator> { // проверка фильтрации на Ш
-        await this.filteringAssertion.waitFor(); 
-        return this.filteringAssertion;
+
+    async checkFilterChess(): Promise<boolean> {
+        await this.filteringAssertion.waitFor();
+        const isFiltered = await this.filteringAssertion.getAttribute('data-filtered');
+        return isFiltered === 'true';
     }
-    async resetFilter(): Promise<void> { // сброс фильтрации
-        await this.filterButton.click();
+    
+    async resetFilter(): Promise<void> {
+        await this.clickFilterButton();
         await this.resetButton.click();
         await this.applicationButton.click();
     }
-    
 }
-/* 
-Проверка работы фильтра на шахматке
-*/

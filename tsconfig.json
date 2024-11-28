@@ -7,7 +7,6 @@
       "esModuleInterop": true,
       "skipLibCheck": true,
       "moduleResolution": "node",
-      "outDir": "./dist",
       
     },
     "include": ["src/**/*", "src/price-editor/page-object"],
