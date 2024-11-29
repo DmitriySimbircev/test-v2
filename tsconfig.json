@@ -9,6 +9,6 @@
       "moduleResolution": "node",
       
     },
-    "include": ["src/**/*", "src/price-editor/page-object"],
+    "include": ["src/**/*"],
     "exclude": ["node_modules"]
   }
