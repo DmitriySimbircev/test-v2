@@ -25,7 +25,7 @@ export class ListOfChangesPage {
     this.publicationButton = page.getByRole('button', { name: 'Опубликовать' });
   }
 
-  getApartmentLocator(floor: number, apartmentNumber: number, priceChange: string): Locator {
+  getApartmentLocator(floor: number, apartmentNumber: number, priceChange: string): Locator { // тоже избыточно на самом деле + если даже хочется, то такие методы стоит делать private
     return this.page.getByLabel(`Этаж ${floor}, кв. ${apartmentNumber} ${priceChange}`).nth(0);
   }
 
@@ -34,8 +34,8 @@ async goToChangesPage(): Promise<void> {
   }
 
 async chooseApartments(apartments: Array<{ floor: number; apartmentNumber: number; priceChange: string }>): Promise<void> {
-    for (const { floor, apartmentNumber, priceChange } of apartments) {
-      const apartmentLocator = this.getApartmentLocator(floor, apartmentNumber, priceChange);
+    for (const { floor, apartmentNumber, priceChange } of apartments) { // а зачем через деструктуризацию, не легче for (const apartment of apartments)
+      const apartmentLocator = this.getApartmentLocator(floor, apartmentNumber, priceChange); // и тут просто прокидывать apartments
       await apartmentLocator.click();
     }
   }
@@ -47,12 +47,12 @@ async deleteApartments(): Promise<void> {
     );
   }
 
-async selectEntirePage(): Promise<void> {
+async selectEntirePage(): Promise<void> { // правильно понимаю - что это выбор всех помещений - если так то лучше как-то более поянтно обозвать как метод, так и локатор
     await this.page.waitForLoadState('domcontentloaded');
     await this.selectPaginatorPage.click();
   }
 
-async recountPrice(newPrice: string): Promise<void> {
+async recountPrice(newPrice: string): Promise<void> { // аналогично лучше number принимать
     await this.editPriceButton.click();
     await this.priceChangeSelector.click();
     await this.replaceValue.click();

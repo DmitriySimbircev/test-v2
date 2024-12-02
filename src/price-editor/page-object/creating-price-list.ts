@@ -14,7 +14,7 @@ export class PriceListsMainPage {
         this.page = page;
         this.priceEditorButton = page.getByRole('link', { name: 'Редактор цен' });
         this.createNewPricesButton = page.getByRole('button', { name: 'Редактировать цены' });
-        this.projectSelection = page.locator('label').filter({ hasText: projectName });
+        this.projectSelection = page.locator('label').filter({ hasText: projectName }); // лучше передавай projectName в тело функций create и delete и задавай локатор там - он ведь у тебя больше нигде и не используется. Так у тебя будет универсальный класс, где ты можешь создать и удалить прайс лист с любым объектом
         this.modalWindow = page.locator('article').filter({ hasText: projectName }).getByRole('button');
         this.confirmButton = page.getByRole('dialog').getByRole('button', { name: 'Редактировать цены' });
         this.cancelButton = page.getByRole('button', { name: 'Отменить' });
@@ -33,13 +33,13 @@ export class PriceListsMainPage {
         if (await this.projectSelection.isEnabled()) {
             await this.projectSelection.click();
             await this.confirmButton.click();
-        } else {
+        } else { // тут вместо вызова метода delete рекомендовал бы сделать метод, который возвращал бы boolean значение - создан ли прайс лист для дома и если да, то в теле теста уже бы вызывал метод delete, а затем уже create. Старайся никогда не создавать циклических вызовов.
             await this.closeSitepage();
             await this.delete();
         }
     }
 
-    async closeSitepage(): Promise<void> {
+    async closeSitepage(): Promise<void> { // SidePage + тебе этот метод не понадобится если сделаешь, как я описал выше
         await this.cancelButton.click();
     }
     

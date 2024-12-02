@@ -8,7 +8,7 @@ export class PublicationPriceListPage {
     public filteredRoom: Locator;
     public atWorkPage: Locator;
 
-    constructor(page: Page, projectName: string) {
+    constructor(page: Page, projectName: string) { // аналогично лучше в метод прокидывать
         this.page = page;
         this.publishedButton = page.getByRole('button', { name: 'Опубликовано' });
         this.project = page.locator('article').filter({ hasText: projectName }).nth(0);
@@ -17,7 +17,7 @@ export class PublicationPriceListPage {
         this.atWorkPage = page.getByRole('link', { name: 'Редакторе цен.' });
     }
 
-    async publishedPage(): Promise<void> {
+    async publishedPage(): Promise<void> { // глагол + название переменной
         await this.publishedButton.click();
         await this.project.click();
     }
@@ -32,6 +32,6 @@ export class PublicationPriceListPage {
     }
     
     async followLinkInAlert(): Promise<void> {
-        await this.atWorkPage.click();
+        await this.atWorkPage.click(); // название переменной как-то не соотносится с названием метода
     }
 }

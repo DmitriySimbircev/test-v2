@@ -14,7 +14,7 @@ export class LoginPage {
     }
 
     async open(): Promise<void> {
-        await this.page.goto(process.env.BASE_URL!)
+        await this.page.goto(process.env.BASE_URL!) // в конфиг base url
     }
     
     async login(): Promise<void> {

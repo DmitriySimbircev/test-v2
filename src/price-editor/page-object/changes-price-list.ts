@@ -2,15 +2,15 @@ import { Page, Locator } from '@playwright/test';
 
 export class ChangesPriceListPage {
     public page: Page;
-    public chessSelect: Locator;
+    public chessSelect: Locator; // советую всем локаторам, которые тебе в теле теста не нужны ставить модификаторы private или protected, чтобы подсказки по методам и свойстав были более лаконичные, ну и безопасность само-собой
     public chessPlus: Locator;
     public changePriceButton: Locator;
     public value: Locator;
     public applyButton: Locator;
-    public priceChangeSelector: Locator;
+    public priceChangeSelector: Locator; // Select - если это просто селекты
     public decrease: Locator;
     public replace: Locator;
-    public unitSelector: Locator;
+    public unitSelector: Locator; // Select - если это просто селекты
     public percent: Locator;
     public sidePage: Locator
 
@@ -25,7 +25,7 @@ export class ChangesPriceListPage {
         this.replace = page.getByRole('option', { name: 'Заменить' });
         this.unitSelector = page.getByLabel('Единица измерения ₽ absolute');
         this.percent = page.getByRole('option', { name: '%' });
-        this.priceChangeSelector = page.getByLabel('Как изменяем Увеличить up');
+        this.priceChangeSelector = page.getByLabel('Как изменяем Увеличить up'); 
         this.sidePage = page.locator('pr-property-price-change-form');
     }
 
@@ -34,13 +34,13 @@ export class ChangesPriceListPage {
         await this.chessPlus.click();
     }
     
-    async changePriceOnFloor(floor: number, value: string, action: 'Уменьшить' | 'Заменить' | 'Увеличить', unit: '%' | '₽'): Promise<void> {
+    async changePriceOnFloor(floor: number, value: string, action: 'Уменьшить' | 'Заменить' | 'Увеличить', unit: '%' | '₽'): Promise<void> { // енамы добавить для action и unit
         const floorLocator = this.page.locator('span').filter({ hasText: new RegExp(`^${floor}$`) }).nth(1);
         await floorLocator.click();
         await this.changePriceButton.click();
         await this.priceChangeSelector.click();
 
-        if (action === 'Заменить') {
+        if (action === 'Заменить') { // через switch-case лучше
             await this.replace.click();
         }
         else if (action === 'Уменьшить') {

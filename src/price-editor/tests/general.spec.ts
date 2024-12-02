@@ -1,4 +1,4 @@
-import { test, expect, Locator } from '@playwright/test';
+import { test, expect, Locator } from '@playwright/test'; // лишние импорты лучше всегдай удаляй - возьми себе как правило)
 import {
     LoginPage,
     PriceListsMainPage,
@@ -19,7 +19,7 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
     await loginPage.open();
     await loginPage.login();
 
-    const creatingPriceListPage: PriceListsMainPage = new PriceListsMainPage(page, projectName);
+    const creatingPriceListPage: PriceListsMainPage = new PriceListsMainPage(page, projectName); // название переменной не обновил + такая типизация избыточна, ты же тут же инициализируешь переменную через конструктор класса
     await creatingPriceListPage.create();
 
     const filtrationPage: FiltrationPage = new FiltrationPage(page);
@@ -28,7 +28,7 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
     await filtrationPage.chooseRoom('3');
     await filtrationPage.chooseStatus('Свободно');
     const isFiltered = await filtrationPage.checkFilterChess();
-    await expect(isFiltered).toBeTruthy();
+    await expect(isFiltered).toBeTruthy(); // await лишний, await используется только на локаторных экспектахб toBeVisible() - например
     await filtrationPage.resetFilter();
 
     const changesPriceListPage = new ChangesPriceListPage(page);
@@ -46,13 +46,13 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
         '-4 444 445 (-88.89%)',
         '+ 250 000 (5%)',
         '-250 000 (-5%)',
-    ]);
+    ]); // выглядит слишком хардкодно, лучше выявить какое-то соотношение с теми данными, который ты закидываешь в метод changePriceOnFloor + как-нибудь разбить на проверку в числах и процентах
     await checkPriceListPage.checkAlertReselection();
 
     const listOfChangesPage: ListOfChangesPage = new ListOfChangesPage(page);
     await listOfChangesPage.goToChangesPage();
     const apartments = [
-        { floor: 1, apartmentNumber: 1, priceChange: '5 000 000→5 010' },
+        { floor: 1, apartmentNumber: 1, priceChange: '5 000 000→5 010' }, // также связь какую-нибудь бы
         { floor: 1, apartmentNumber: 2, priceChange: '5 000 000→5 010' },
         { floor: 1, apartmentNumber: 3, priceChange: '5 000 000→5 010' },
         { floor: 2, apartmentNumber: 4, priceChange: '5 000 000→4 990' },
@@ -70,6 +70,6 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
     const successAlert = await publicationPriceListPage.checkAlert();
     await expect(successAlert).toHaveText('Изменения цен успешно опубликованы');
     const isSelected = await publicationPriceListPage.checkChess();
-    await expect(isSelected).toBeTruthy();
-    await publicationPriceListPage.followLinkInAlert();
+    await expect(isSelected).toBeTruthy(); // лишний await
+    await publicationPriceListPage.followLinkInAlert(); // как будто бы какого-то алерта в конце не хватает, ну перешел и что дальше? Хотя бы проверку по URL
 });
