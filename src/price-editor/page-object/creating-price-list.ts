@@ -1,46 +1,51 @@
 import { Page, Locator } from '@playwright/test';
 
-export class CreatingPriceListPage { // у тебя тут есть и создание и удаление, кажется, что название неверное, думаю лучше PriceListsMainPage
+export class PriceListsMainPage {
     public page: Page;
     public priceEditorButton: Locator;
-    public newPricesButton: Locator;
+    public createNewPricesButton: Locator;
     public projectSelection: Locator;
     public confirmButton: Locator;
     public cancelButton: Locator;
     public modalWindow: Locator;
     public deleteButton: Locator;
 
-    constructor(page: Page) {
+    constructor(page: Page, projectName: string) {
         this.page = page;
         this.priceEditorButton = page.getByRole('link', { name: 'Редактор цен' });
-        this.newPricesButton = page.getByRole('button', { name: 'Редактировать цены' }); // ИМХО кнопки лучше начать называть с глагола createNewPricesButton - что-то в этом духеы
-        this.projectSelection = page.locator('label').filter({ hasText: process.env.PROJECT_NAME! });
+        this.createNewPricesButton = page.getByRole('button', { name: 'Редактировать цены' });
+        this.projectSelection = page.locator('label').filter({ hasText: projectName }); // лучше передавай projectName в тело функций create и delete и задавай локатор там - он ведь у тебя больше нигде и не используется. Так у тебя будет универсальный класс, где ты можешь создать и удалить прайс лист с любым объектом
+        this.modalWindow = page.locator('article').filter({ hasText: projectName }).getByRole('button');
         this.confirmButton = page.getByRole('dialog').getByRole('button', { name: 'Редактировать цены' });
         this.cancelButton = page.getByRole('button', { name: 'Отменить' });
-        this.modalWindow = page.locator('article').filter({ hasText: process.env.PROJECT_NAME! }).getByRole('button');
         this.deleteButton = page.getByRole('button', { name: 'Удалить' });
     }
 
-    async createPriceList(): Promise<void> { // лучше выдели открытие страницы в отдельный метод, потом же тебе наверняка надо будет использовать другие действия на странице: просмотр/редактирование/удаление -  каждый раз будешь открытие страницы зашивать внутрь нового метода? + у тебя в названии класса уже есть PriceList, как по мне лучше оставить просто названия create и delete
-// лишние отсупы по файлам убрать
-        await this.priceEditorButton.click(); 
-        await this.page.waitForResponse(response => response.url().includes('/api/v4/json/house'))
-        await this.newPricesButton.click();
+    async openPriceEditor(): Promise<void> {
+        await this.priceEditorButton.click();
+        await this.page.waitForResponse(response => response.url().includes('/api/v4/json/house'));
+    }
 
-        // Проверяем доступность выбора проекта
+    async create(): Promise<void> {
+        await this.openPriceEditor();
+        await this.createNewPricesButton.click();
+
         if (await this.projectSelection.isEnabled()) {
             await this.projectSelection.click();
             await this.confirmButton.click();
-        } 
-        else {
-            await this.deletePricelist();
+        } else { // тут вместо вызова метода delete рекомендовал бы сделать метод, который возвращал бы boolean значение - создан ли прайс лист для дома и если да, то в теле теста уже бы вызывал метод delete, а затем уже create. Старайся никогда не создавать циклических вызовов.
+            await this.closeSitepage();
+            await this.delete();
         }
     }
 
-    async deletePricelist(): Promise<void> { // этот метод публичный, попробуй его использовать не в контексте создания - не получится, во первых у тебя захардкожен ЖК на уровне локатора, а должен он передаваться из тела теста
+    async closeSitepage(): Promise<void> { // SidePage + тебе этот метод не понадобится если сделаешь, как я описал выше
         await this.cancelButton.click();
+    }
+    
+    async delete(): Promise<void> {
         await this.modalWindow.click();
         await this.deleteButton.click();
-        await this.createPriceList(); // Переходим снова к созданию после удаления
+        await this.create();
     }
 }

@@ -1,61 +1,65 @@
-import { Page, Locator } from '@playwright/test'
-export class FiltrationPage { // посмотри https://stackoverflow.com/questions/33305954/typescript-export-vs-default-export
-// пробелы - дальше уже не пишу
-    public page: Page
-    public filterButton: Locator
-    public floorsFrom: Locator
-    public floorsTo: Locator
-    public selectRoominess: Locator
-    public choiceRoominess: Locator
-    public selectStatus: Locator
-    public choiseStatus: Locator
-    public applicationButton: Locator
-    public resetButton: Locator
-    public filteringAssertion: Locator
+import { Page, Locator } from '@playwright/test';
+
+export class FiltrationPage {
+    public page: Page;
+    public filterButton: Locator;
+    public floorsFrom: Locator;
+    public floorsTo: Locator;
+    public selectRoominess: Locator; // если у тебя селект, баттоны, инпуты, то лучше в конце пиши обозначение roominessSelect - пройдись по всем страничкам
+    public selectStatus: Locator;
+    public applicationButton: Locator;
+    public resetButton: Locator;
+    public filteringAssertion: Locator;
 
     constructor(page: Page) {
         this.page = page;
-        this.filterButton = page.locator('button.ng-star-inserted:has-text("Фильтры")'); // ng-star-inserted - безполезный класс, есть везде в ангуляре, переделай тогда уж на на getByText
-        this.floorsFrom = page.locator('input[placeholder="с "]'); // переделай тогда уж на на getByPlaceholder
-        this.floorsTo = page.locator('input[placeholder="по "]');
-        this.selectRoominess = page.locator('pb-multiselect:nth-child(2) > label > tui-multi-select > tui-hosted-dropdown > div > .t-input > .t-hosted > div > div > div'); // надо что-то делать так оставлять нельзя
-        this.choiceRoominess = page.getByRole('option', { name: '3' }); // хардкод
-        this.selectStatus = page.locator('pb-multiselect:nth-child(6) > label > tui-multi-select > tui-hosted-dropdown > div > .t-input > .t-hosted > div > div > div');
-        this.choiseStatus = page.getByRole('option', { name: 'Свободно' }); // хардкод
+        this.filterButton = page.getByRole('button', { name: 'Фильтры' });
+        this.floorsFrom = page.getByPlaceholder('с ');
+        this.floorsTo = page.getByPlaceholder('по ');
+        this.selectRoominess = page.locator('pb-multiselect:nth-child(2) label tui-multi-select'); // чейни локаторы - это будет аналогично записи page.locator('').nth(2).getByRole('label').locator('tui-multi-select')
+        this.selectStatus = page.locator('pb-multiselect:nth-child(6) label tui-multi-select'); // аналогично
         this.applicationButton = page.getByRole('button', { name: 'Применить' });
         this.resetButton = page.getByRole('button', { name: 'Сбросить' });
         this.filteringAssertion = page.locator('[data-index="14836376"]');
-        
-
     }
 
-    async clickfilterButton(): Promise<void> { // переход к фильтрам - лушче openFiltering - по тесту больше понятно
+    async openFiltering(): Promise<void> { 
+        await this.clickFilterButton();
+    }
+
+    private async clickFilterButton(): Promise<void> { // зачем этот отедльный метод? Избыточно
         await this.filterButton.click();
     }
-    async choiceOfFloor(): Promise<void> { // выбор этажа choice - выбор (сущ.), choose - выбирать
-        await this.floorsFrom.fill('1'); // хардкод
-        await this.floorsTo.fill('1'); 
+
+    async chooseFloor({ from, to }: { from: string; to: string }): Promise<void> {
+        await this.floorsFrom.fill(from);
+        await this.floorsTo.fill(to);
     }
-    async choiceOfRoom(): Promise<void> { // выбор комнатности
+
+    async chooseRoom(roomNumber: string): Promise<void> { // я понимаю, что в локаторы надо передавать string, но как здесь, так и выше в методах, где логически предполагаются цифры, лучше передавать цифры
         await this.selectRoominess.click();
-        await this.choiceRoominess.click(); // хардкод
+        const roomOption = this.page.getByRole('option', { name: roomNumber });
+        await roomOption.click();
     }
-    async choiceStatus(): Promise<void> { // выбор статуса
+
+    async chooseStatus(status: string): Promise<void> { // тут бы хорошо enum сделать со статусами помещения для типизации
         await this.selectStatus.click();
-        await this.choiseStatus.click(); 
+        const statusOption = this.page.getByRole('option', { name: status });
+        await statusOption.click();
         await this.applicationButton.click();
+        await this.page.waitForResponse(response =>
+            response.url().includes('/api/v4/json/property'));
     }
-    async checkFilterChess(): Promise<Locator> { // проверка фильтрации на Ш
-        await this.filteringAssertion.waitFor(); 
-        return this.filteringAssertion; // можешь проверять фильтрацию в методе , а возвращать true или false, а результат уже в expect
+
+    async checkFilterChess(): Promise<boolean> {
+        await this.filteringAssertion.waitFor();
+        const isFiltered = await this.filteringAssertion.getAttribute('data-filtered');
+        return isFiltered === 'true';
     }
-    async resetFilter(): Promise<void> { // сброс фильтрации
-        await this.filterButton.click(); // лишнее, лучше функцию вызывай
+    
+    async resetFilter(): Promise<void> {
+        await this.clickFilterButton();
         await this.resetButton.click();
         await this.applicationButton.click();
     }
-    
 }
-/* 
-Проверка работы фильтра на шахматке - ты себе или мне оставляешь такие комменты?)
-*/

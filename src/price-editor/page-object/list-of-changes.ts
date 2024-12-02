@@ -1,76 +1,66 @@
-import { Page, Locator } from '@playwright/test'
-export class ListOfChangesPage {
+import { Page, Locator } from '@playwright/test';
 
-  public page: Page
-  public changesButton: Locator
-  public oneRoom: Locator
-  public twoRoom: Locator
-  public threRoom: Locator
-  public fourRoom: Locator
-  public fiveRoom: Locator
-  public sixRoom: Locator
-  public deleteButton: Locator
-  public pageSelection: Locator
-  public editPriceButton: Locator
-  public replaceSelect: Locator
-  public replace: Locator
-  public value: Locator
-  public changeButton: Locator
-  public publicationButton: Locator
+export class ListOfChangesPage {
+  public page: Page;
+  public changesButton: Locator;
+  public deleteButton: Locator;
+  public selectPaginatorPage: Locator;
+  public editPriceButton: Locator;
+  public priceChangeSelector: Locator;
+  public replaceValue: Locator;
+  public priceValue: Locator;
+  public changeButton: Locator;
+  public publicationButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
+    this.changesButton = page.getByRole('button', { name: 'Список изменений' });
+    this.deleteButton = page.getByRole('button', { name: 'Удалить' });
+    this.selectPaginatorPage = page.getByLabel('Страница');
+    this.editPriceButton = page.getByRole('button', { name: 'Редактировать цену' });
+    this.priceChangeSelector = page.getByLabel('Как изменяем Увеличить up');
+    this.replaceValue = page.getByRole('option', { name: 'Заменить' });
+    this.priceValue = page.getByPlaceholder('Укажите значение');
+    this.changeButton = page.getByRole('button', { name: 'Изменить' });
+    this.publicationButton = page.getByRole('button', { name: 'Опубликовать' });
+  }
 
-    this.changesButton = page.getByRole('button', { name: 'Список изменений' })
-    this.oneRoom = page.getByLabel('Этаж 1, кв. 1 5 000 000→5 010')
-    this.twoRoom = page.getByLabel('Этаж 1, кв. 2 5 000 000→5 010')
-    this.threRoom = page.getByLabel('Этаж 1, кв. 3 5 000 000→5 010')
-    this.fourRoom = page.getByLabel('Этаж 2, кв. 4 5 000 000→4 990')
-    this.fiveRoom = page.getByLabel('Этаж 2, кв. 6 5 000 000→4 990')
-    this.sixRoom = page.getByLabel('Этаж 3, кв. 7 5 000 000→555')
-    this.deleteButton = page.getByRole('button', { name: 'Удалить' })
-    this.pageSelection = page.getByLabel('Страница') // по названию не понятно, что это
-    this.editPriceButton = page.getByRole('button', { name: 'Редактировать цену' })
-    this.replaceSelect = page.getByLabel('Как изменяем Увеличить up') // у этого и следующего локатора названия неговорящие(
-    this.replace = page.getByRole('option', { name: 'Заменить' })
-    this.value = page.getByPlaceholder('Укажите значение')
-    this.changeButton = page.getByRole('button', { name: 'Изменить' })
-    this.publicationButton = page.getByRole('button', { name: 'Опубликовать' })
+  getApartmentLocator(floor: number, apartmentNumber: number, priceChange: string): Locator { // тоже избыточно на самом деле + если даже хочется, то такие методы стоит делать private
+    return this.page.getByLabel(`Этаж ${floor}, кв. ${apartmentNumber} ${priceChange}`).nth(0);
   }
-  async changesPage(): Promise<void> { // переход на страницу изменений - глагол!
-    await this.changesButton.click()
+
+async goToChangesPage(): Promise<void> {
+    await this.changesButton.click();
   }
-  async choiceApartments(): Promise<void> { // точечно выбираем помещения - универсальная функция должна быть
-    await this.oneRoom.click()
-    await this.twoRoom.click()
-    await this.threRoom.click()
-    await this.fourRoom.click()
-    await this.fiveRoom.click()
-    await this.sixRoom.click()
+
+async chooseApartments(apartments: Array<{ floor: number; apartmentNumber: number; priceChange: string }>): Promise<void> {
+    for (const { floor, apartmentNumber, priceChange } of apartments) { // а зачем через деструктуризацию, не легче for (const apartment of apartments)
+      const apartmentLocator = this.getApartmentLocator(floor, apartmentNumber, priceChange); // и тут просто прокидывать apartments
+      await apartmentLocator.click();
+    }
   }
-  async deletionApartmens(): Promise<void> { // удаляем выбранные помещения - глагол!
-    await this.deleteButton.click()
-    
-    await this.page.waitForResponse(response =>
+
+async deleteApartments(): Promise<void> {
+    await this.deleteButton.click();
+    await this.page.waitForResponse((response) =>
       response.url().includes('/price-recalculation/api/price-lists/') && response.url().includes('houseId')
     );
+  }
+
+async selectEntirePage(): Promise<void> { // правильно понимаю - что это выбор всех помещений - если так то лучше как-то более поянтно обозвать как метод, так и локатор
+    await this.page.waitForLoadState('domcontentloaded');
+    await this.selectPaginatorPage.click();
+  }
+
+async recountPrice(newPrice: string): Promise<void> { // аналогично лучше number принимать
+    await this.editPriceButton.click();
+    await this.priceChangeSelector.click();
+    await this.replaceValue.click();
+    await this.priceValue.fill(newPrice);
+    await this.changeButton.click();
+  }
   
+ async publishPrice(): Promise<void> {
+    await this.publicationButton.click();
   }
-  async selectEntirePage(): Promise<void> { // после удаления выбираем чекбоксом всю старницу
-    await this.page.waitForLoadState('domcontentloaded')
-    await this.pageSelection.click()
-  }
-  async replacementPrice(): Promise<void> { // делаем перерасчет ранее измененных помещений, ГЛАГОЛ!
-    await this.editPriceButton.click()
-    await this.replaceSelect.click()
-    await this.replace.click()
-    await this.value.click() // зачем сначала click, а потом fill?
-    await this.value.fill('5000000') // хардкод
-    await this.changeButton.click()
-  }
-  async publicationPrice(): Promise<void> { // публикум прайс - глагол!!!
-    await this.publicationButton.click()
-  }
-
 }
-
