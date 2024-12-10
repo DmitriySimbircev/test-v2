@@ -15,6 +15,7 @@ export default defineConfig({
   reporter: [['html', { outputFolder: 'artifacts' }]],
 
   use: {
+    baseURL: 'https://pb15312.profitbase.ru',
     video: 'off',
     //launchOptions: { slowMo: 700 },
     trace: 'on',

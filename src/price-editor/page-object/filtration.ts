@@ -1,64 +1,65 @@
 import { Page, Locator } from '@playwright/test';
 
+export enum RoomStatus {
+    Available = 'Свободно'
+}
+
 export class FiltrationPage {
-    public page: Page;
-    public filterButton: Locator;
-    public floorsFrom: Locator;
-    public floorsTo: Locator;
-    public selectRoominess: Locator;
-    public selectStatus: Locator;
-    public applicationButton: Locator;
-    public resetButton: Locator;
-    public filteringAssertion: Locator;
+    private page: Page;
+    private filterButton: Locator;
+    private floorsFrom: Locator;
+    private floorsTo: Locator;
+    private roominessSelect: Locator;
+    private statusSelect: Locator;
+    private applicationButton: Locator;
+    private resetButton: Locator;
+    private filteringAssertion: Locator;
 
     constructor(page: Page) {
         this.page = page;
         this.filterButton = page.getByRole('button', { name: 'Фильтры' });
         this.floorsFrom = page.getByPlaceholder('с ');
         this.floorsTo = page.getByPlaceholder('по ');
-        this.selectRoominess = page.locator('pb-multiselect:nth-child(2) label tui-multi-select');
-        this.selectStatus = page.locator('pb-multiselect:nth-child(6) label tui-multi-select');
+        this.roominessSelect = page.locator('pb-multiselect').nth(1).locator('label tui-multi-select');
+        this.statusSelect = page.locator('pb-multiselect').nth(3).locator('label tui-multi-select');
         this.applicationButton = page.getByRole('button', { name: 'Применить' });
         this.resetButton = page.getByRole('button', { name: 'Сбросить' });
         this.filteringAssertion = page.locator('[data-index="14836376"]');
     }
 
-    async openFiltering(): Promise<void> {
-        await this.clickFilterButton();
-    }
-
-    private async clickFilterButton(): Promise<void> {
+    public async openFiltering(): Promise<void> {
         await this.filterButton.click();
     }
 
-    async chooseFloor({ from, to }: { from: string; to: string }): Promise<void> {
-        await this.floorsFrom.fill(from);
-        await this.floorsTo.fill(to);
+    public async chooseFloor({ from, to }: { from: number; to: number }): Promise<void> {
+        await this.floorsFrom.fill(from.toString());
+        await this.floorsTo.fill(to.toString());
     }
 
-    async chooseRoom(roomNumber: string): Promise<void> {
-        await this.selectRoominess.click();
-        const roomOption = this.page.getByRole('option', { name: roomNumber });
+    public async chooseRoom(roomNumber: number): Promise<void> {
+        await this.roominessSelect.click();
+        const roomOption = this.page.getByRole('option', { name: roomNumber.toString() });
         await roomOption.click();
     }
 
-    async chooseStatus(status: string): Promise<void> {
-        await this.selectStatus.click();
+    public async chooseStatus(status: RoomStatus): Promise<void> {
+        await this.statusSelect.click();
         const statusOption = this.page.getByRole('option', { name: status });
         await statusOption.click();
         await this.applicationButton.click();
         await this.page.waitForResponse(response =>
-            response.url().includes('/api/v4/json/property'));
+            response.url().includes('/api/v4/json/property')
+        );
     }
 
-    async checkFilterChess(): Promise<boolean> {
+    public async checkFilterChess(): Promise<boolean> {
         await this.filteringAssertion.waitFor();
         const isFiltered = await this.filteringAssertion.getAttribute('data-filtered');
         return isFiltered === 'true';
     }
-    
-    async resetFilter(): Promise<void> {
-        await this.clickFilterButton();
+
+    public async resetFilter(): Promise<void> {
+        await this.filterButton.click();
         await this.resetButton.click();
         await this.applicationButton.click();
     }

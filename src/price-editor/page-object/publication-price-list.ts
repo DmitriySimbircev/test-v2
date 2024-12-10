@@ -1,37 +1,36 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 export class PublicationPriceListPage {
-    public page: Page;
-    public publishedButton: Locator;
-    public project: Locator;
-    public successAllert: Locator;
-    public filteredRoom: Locator;
-    public atWorkPage: Locator;
+    private page: Page;
+    private publishedButton: Locator;
+    private successAllert: Locator;
+    private filteredRoom: Locator;
+    private clickLinkInAlert: Locator;
 
-    constructor(page: Page, projectName: string) {
+    constructor(page: Page) {
         this.page = page;
         this.publishedButton = page.getByRole('button', { name: 'Опубликовано' });
-        this.project = page.locator('article').filter({ hasText: projectName }).nth(0);
         this.successAllert = page.getByRole('heading', { name: 'Изменения цен успешно опубликованы' });
         this.filteredRoom = page.locator('[data-index="14836386"]');
-        this.atWorkPage = page.getByRole('link', { name: 'Редакторе цен.' });
+        this.clickLinkInAlert = page.getByRole('link', { name: 'Редакторе цен.' });
     }
-
-    async publishedPage(): Promise<void> {
+    
+    public async goToPublishedPriceListsPage(projectName: string): Promise<void> {
         await this.publishedButton.click();
-        await this.project.click();
+        const project = this.page.locator('article').filter({ hasText: projectName }).nth(0);
+        await project.click();
     }
 
-    async checkAlert(): Promise<Locator> {
+    public async checkAlert(): Promise<Locator> {
         return this.successAllert;
     }
 
-    async checkChess(): Promise<boolean> {
+    public async checkChess(): Promise<boolean> {
         const isSelected = await this.filteredRoom.getAttribute('data-selected');
         return isSelected === 'true';
     }
-    
-    async followLinkInAlert(): Promise<void> {
-        await this.atWorkPage.click();
+
+    public async followLinkInAlert(): Promise<void> {
+        await this.clickLinkInAlert.click();
     }
 }

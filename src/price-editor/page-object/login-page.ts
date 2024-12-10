@@ -4,7 +4,7 @@ export class LoginPage {
     private page: Page
     private username: Locator
     private password: Locator
-    public loginButton: Locator
+    private loginButton: Locator
 
     constructor(page: Page) {
         this.page = page
@@ -13,11 +13,11 @@ export class LoginPage {
         this.loginButton = page.getByRole('button', { name: 'Войти' })
     }
 
-    async open(): Promise<void> {
-        await this.page.goto(process.env.BASE_URL!)
+    public async open(): Promise<void> {
+        await this.page.goto('/new')
     }
-    
-    async login(): Promise<void> {
+
+    public async login(): Promise<void> {
         await this.username.fill(process.env.LOGIN!);
         await this.password.fill(process.env.PASSWORD!);
         await this.loginButton.click()
