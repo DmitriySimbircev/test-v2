@@ -12,7 +12,7 @@ export class CheckPriceListPage {
     public async checkResult(expectedValues: string[]): Promise<void> {
         for (const value of expectedValues) {
             const checkPriceChanges = this.page.getByText(value).first();
-            await checkPriceChanges.click();
+            await checkPriceChanges.click(); // а  в чем проверка? тут кажется просто выбор по твоим селекторам... Не совсем логично, тут кажется переплетены два метода, что не должно быть
         }
     }
 

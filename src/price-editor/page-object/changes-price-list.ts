@@ -1,7 +1,7 @@
 import { Page, Locator } from '@playwright/test';
 
 export enum ActionType {
-    Decrease = 'Уменьшить',
+    Decrease = 'Уменьшить', // тоже с маленькой
     Replace = 'Заменить',
     Increase = 'Увеличить',
 }
@@ -47,10 +47,10 @@ export class ChangesPriceListPage {
 
     public async changePriceOnFloor(
         floor: number,
-        value: string,
+        value: string, // логичнее чтобы значение было number, а в fill ты уже можешь преобразовать через .toString()
         action: ActionType,
         unit: UnitType
-    ): Promise<void> {
+    ): Promise<void> { // можно было в целом одной строкой, но если решил разделить - то ок
         const floorLocator = this.page.locator('span').filter({ hasText: new RegExp(`^${floor}$`) }).nth(1);
         await floorLocator.click();
         await this.changePriceButton.click();
@@ -63,17 +63,17 @@ export class ChangesPriceListPage {
             case ActionType.Replace:
                 await this.replace.click();
                 break;
-            case ActionType.Increase:
+            case ActionType.Increase: // если ничего не делаешь, то можно и не писать
                 break;
         }
-
+        // эти пустые строчки можно не делать, если хочется разделить, то сделай тогда маленькие вспомогательные приватные  методы
         await this.unitSelect.click();
 
         switch (unit) {
             case UnitType.Percent:
-                await this.percent.click();
+                await this.percent.click(); 
                 break;
-            case UnitType.Currency:
+            case UnitType.Currency: // тут если уберешь, то лучше через if, т.к. останется только 1 условие
                 break;
         }
 

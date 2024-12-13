@@ -31,12 +31,12 @@ export class ListOfChangesPage {
 
   public async chooseApartments(apartments: { floor: number; apartmentNumber: number; priceChange: string }[]): Promise<void> {
     for (const apartment of apartments) {
-      const apartmentLocator = this.page.getByLabel(`Этаж ${apartment.floor}, кв. ${apartment.apartmentNumber} ${apartment.priceChange}`).nth(0);
+      const apartmentLocator = this.page.getByLabel(`Этаж ${apartment.floor}, кв. ${apartment.apartmentNumber} ${apartment.priceChange}`).nth(0); // а не легче просто по номеру квартиры брать?
       await apartmentLocator.click();
     }
   }
 
-  public async deleteApartments(): Promise<void> {
+  public async deleteApartments(): Promise<void> { // завязан с предыдущим методом, лучше сюда передавать квартиры на удаление или указать эту связку в названии: допустим "deleteChoosenApartments"
     await this.deleteButton.click();
     await this.page.waitForResponse((response) =>
       response.url().includes('/price-recalculation/api/price-lists/') && response.url().includes('houseId')

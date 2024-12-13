@@ -1,7 +1,7 @@
 import { Page, Locator } from '@playwright/test';
 
-export enum RoomStatus {
-    Available = 'Свободно'
+export enum RoomStatus { // пока может тут полежать, но если еще будешь где-то использовать (а ты будешь использовать) - надо выносить в отдельный файлик
+    Available = 'Свободно' // available - лучше с маленькой буквы, а чего остальные не выписал, их же всего 4 статуса
 }
 
 export class FiltrationPage {
@@ -20,7 +20,7 @@ export class FiltrationPage {
         this.filterButton = page.getByRole('button', { name: 'Фильтры' });
         this.floorsFrom = page.getByPlaceholder('с ');
         this.floorsTo = page.getByPlaceholder('по ');
-        this.roominessSelect = page.locator('pb-multiselect').nth(1).locator('label tui-multi-select');
+        this.roominessSelect = page.locator('pb-multiselect').nth(1).locator('label tui-multi-select'); // дочейни лучше, будет покрасивше
         this.statusSelect = page.locator('pb-multiselect').nth(3).locator('label tui-multi-select');
         this.applicationButton = page.getByRole('button', { name: 'Применить' });
         this.resetButton = page.getByRole('button', { name: 'Сбросить' });
@@ -37,7 +37,7 @@ export class FiltrationPage {
     }
 
     public async chooseRoom(roomNumber: number): Promise<void> {
-        await this.roominessSelect.click();
+        await this.roominessSelect.click(); // можно в следующий раз попробовать использовать метод selectOption (просто предложение на будующее)
         const roomOption = this.page.getByRole('option', { name: roomNumber.toString() });
         await roomOption.click();
     }
@@ -49,7 +49,7 @@ export class FiltrationPage {
         await this.applicationButton.click();
         await this.page.waitForResponse(response =>
             response.url().includes('/api/v4/json/property')
-        );
+        ); // а чего не в 1 строку? переноси если длинная слишком и то лучше тогда на 2 строки, не 3:  ... response.url().includes('/api/v4/json/property'));
     }
 
     public async checkFilterChess(): Promise<boolean> {
