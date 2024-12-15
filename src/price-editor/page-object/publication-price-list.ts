@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test'; // убирай неиспользуемые импорты (expect)
 
 export class PublicationPriceListPage {
     private page: Page;
@@ -17,12 +17,12 @@ export class PublicationPriceListPage {
     
     public async goToPublishedPriceListsPage(projectName: string): Promise<void> {
         await this.publishedButton.click();
-        const project = this.page.locator('article').filter({ hasText: projectName }).nth(0);
+        const project = this.page.locator('article').filter({ hasText: projectName }).nth(0); // красивее просто .first()
         await project.click();
     }
 
-    public async checkAlert(): Promise<Locator> {
-        return this.successAllert;
+    public async checkAlert(): Promise<Locator> { // в чем чек, тут просто получение getAlert
+        return this.successAllert; 
     }
 
     public async checkChess(): Promise<boolean> {

@@ -1,5 +1,5 @@
 import {
-    test, expect, Locator,
+    test, expect, Locator, // Внешние зависимости лучше импортируй отдельно, не стоит все запихивать в 1 импорт
     LoginPage,
     PriceListsMainPage,
     FiltrationPage,RoomStatus,
@@ -13,8 +13,8 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
 
     test.slow();
 
-    const projectName = 'Тест SDA (не удалять не использовать)';
-
+    const projectName = 'Тест SDA (не удалять не использовать)'; // Конфигурационные константы стоит писать в таком виде "PROJECT_NAME" 
+    // стоит добавить степы для читаемости и логического разделения
     const loginPage = new LoginPage(page);
     await loginPage.open();
     await loginPage.login();
@@ -44,13 +44,13 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
     await changesPriceListPage.changePriceOnFloor(5, '5', ActionType.Decrease, UnitType.Percent);
 
     const checkPriceListPage = new CheckPriceListPage(page);
-    await checkPriceListPage.checkResult([
+    await checkPriceListPage.checkResult([ 
         '+ 10 000 (0.2%)',
         '-10 000 (-0.2%)',
         '-4 444 445 (-88.89%)',
         '+ 250 000 (5%)',
         '-250 000 (-5%)',
-    ]);  
+    ]); // после грейда подумать как связать эти значения по тесту
     await checkPriceListPage.closeReselectAlert();
 
     const listOfChangesPage = new ListOfChangesPage(page);
@@ -76,5 +76,7 @@ test('https://jira.abanking.ru/secure/Tests.jspa#/testCase/PBA-T353', async ({ p
     const isChessSelected = await publicationPriceListPage.checkChess();
     expect(isChessSelected).toBeTruthy();
     await publicationPriceListPage.followLinkInAlert();
-    await expect(page).toHaveURL(/.*\/new\/prices/);
+    await expect(page).toHaveURL(/.*\/new\/prices/); // можешь в целом сюда подставить урл лк из .env , но не критично
 });
+
+// удали артефаекты из репы удаленной
