@@ -10,16 +10,16 @@ export class LoginPage {
 
     constructor(page: Page) {
         this.page = page
-        this.username = page.getByLabel('Email')
-        this.password = page.getByLabel('Password')
-        this.loginButton = page.getByRole('button', { name: 'Log in' })
-        this.languageSelect = page.getByLabel('[object Object]')
-        this.russianButton = page.getByRole('option', { name: 'Русский' })
+        this.username = page.locator('[formcontrolname="login"]').locator('[type="text"]')
+        this.password = page.locator('[formcontrolname="password"]').locator('[type="password"]')
+        this.loginButton = page.locator('[type="submit"]').locator('button')
+        this.languageSelect = page.locator('pb-language').locator('tui-select')
+        this.russianButton = page.locator('tui-data-list').locator('button').first()
 
     }
 
     public async open(): Promise<void> {
-        await this.page.goto('/new')
+        await this.page.goto('new/catalog/projects')
     }
 
     public async login(): Promise<void> {
@@ -32,5 +32,4 @@ export class LoginPage {
         await this.languageSelect.click()
         await this.russianButton.click()
     }
-
 }
