@@ -5,12 +5,17 @@ export class LoginPage {
     private username: Locator
     private password: Locator
     private loginButton: Locator
+    private languageSelect: Locator
+    private russianButton: Locator
 
     constructor(page: Page) {
         this.page = page
-        this.username = page.getByLabel('Логин / E-mail')
-        this.password = page.getByLabel('Пароль')
-        this.loginButton = page.getByRole('button', { name: 'Войти' })
+        this.username = page.getByLabel('Email')
+        this.password = page.getByLabel('Password')
+        this.loginButton = page.getByRole('button', { name: 'Log in' })
+        this.languageSelect = page.getByLabel('[object Object]')
+        this.russianButton = page.getByRole('option', { name: 'Русский' })
+
     }
 
     public async open(): Promise<void> {
@@ -23,4 +28,9 @@ export class LoginPage {
         await this.loginButton.click()
         await this.page.waitForLoadState()
     }
+    public async language():Promise<void> {
+        await this.languageSelect.click()
+        await this.russianButton.click()
+    }
+
 }

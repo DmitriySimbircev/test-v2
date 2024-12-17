@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 
 export class PublicationPriceListPage {
     private page: Page;
@@ -17,11 +17,11 @@ export class PublicationPriceListPage {
     
     public async goToPublishedPriceListsPage(projectName: string): Promise<void> {
         await this.publishedButton.click();
-        const project = this.page.locator('article').filter({ hasText: projectName }).nth(0);
+        const project = this.page.locator('article').filter({ hasText: projectName }).first();
         await project.click();
     }
 
-    public async checkAlert(): Promise<Locator> {
+    public async getAlert(): Promise<Locator> {
         return this.successAllert;
     }
 

@@ -1,14 +1,14 @@
 import { Page, Locator } from '@playwright/test';
 
 export enum ActionType {
-    Decrease = 'Уменьшить',
-    Replace = 'Заменить',
-    Increase = 'Увеличить',
+    decrease = 'Уменьшить',
+    replace = 'Заменить',
+    increase = 'Увеличить',
 }
 
 export enum UnitType {
-    Percent = '%',
-    Currency = '₽',
+    percent = '%',
+    currency = '₽',
 }
 
 export class ChangesPriceListPage {
@@ -47,7 +47,7 @@ export class ChangesPriceListPage {
 
     public async changePriceOnFloor(
         floor: number,
-        value: string,
+        value: number,
         action: ActionType,
         unit: UnitType
     ): Promise<void> {
@@ -57,33 +57,24 @@ export class ChangesPriceListPage {
         await this.priceChangeSelect.click();
 
         switch (action) {
-            case ActionType.Decrease:
+            case ActionType.decrease:
                 await this.decrease.click();
                 break;
-            case ActionType.Replace:
+            case ActionType.replace:
                 await this.replace.click();
                 break;
-            case ActionType.Increase:
-                break;
         }
-
         await this.unitSelect.click();
 
-        switch (unit) {
-            case UnitType.Percent:
-                await this.percent.click();
-                break;
-            case UnitType.Currency:
-                break;
+        if (unit === UnitType.percent) {
+            await this.percent.click();
         }
 
-        await this.value.fill(value);
+        await this.value.fill(value.toString());
         await this.applyButton.click();
 
         await this.page.waitForResponse(response =>
-            response.url().includes('/price-recalculation/api/price-lists/') &&
-            response.url().includes('/houses')
-        );
+            response.url().includes('/price-recalculation/api/price-lists/') && response.url().includes('/houses'));
         await this.sidePage.waitFor({ state: 'detached' });
     }
 }

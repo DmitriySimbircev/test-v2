@@ -1,4 +1,3 @@
-export { test, expect, Locator } from '@playwright/test';
 export { LoginPage } from './login-page';
 export { PriceListsMainPage } from './creating-price-list';
 export { FiltrationPage,RoomStatus } from './filtration';

@@ -1,7 +1,9 @@
 import { Page, Locator } from '@playwright/test';
 
 export enum RoomStatus {
-    Available = 'Свободно'
+    available = 'Свободно',
+    reserved = 'Бронь',
+    sold = 'Продано',
 }
 
 export class FiltrationPage {
@@ -20,8 +22,8 @@ export class FiltrationPage {
         this.filterButton = page.getByRole('button', { name: 'Фильтры' });
         this.floorsFrom = page.getByPlaceholder('с ');
         this.floorsTo = page.getByPlaceholder('по ');
-        this.roominessSelect = page.locator('pb-multiselect').nth(1).locator('label tui-multi-select');
-        this.statusSelect = page.locator('pb-multiselect').nth(3).locator('label tui-multi-select');
+        this.roominessSelect = page.locator('[formcontrolname="roominess"]');
+        this.statusSelect = page.locator('[formcontrolname="status"]');
         this.applicationButton = page.getByRole('button', { name: 'Применить' });
         this.resetButton = page.getByRole('button', { name: 'Сбросить' });
         this.filteringAssertion = page.locator('[data-index="14836376"]');
@@ -47,9 +49,7 @@ export class FiltrationPage {
         const statusOption = this.page.getByRole('option', { name: status });
         await statusOption.click();
         await this.applicationButton.click();
-        await this.page.waitForResponse(response =>
-            response.url().includes('/api/v4/json/property')
-        );
+        await this.page.waitForResponse(response => response.url().includes('/api/v4/json/property'));
     }
 
     public async checkFilterChess(): Promise<boolean> {

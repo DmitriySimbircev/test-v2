@@ -29,18 +29,17 @@ export class ListOfChangesPage {
     await this.changesButton.click();
   }
 
-  public async chooseApartments(apartments: { floor: number; apartmentNumber: number; priceChange: string }[]): Promise<void> {
+  public async chooseApartments(apartments: { floor: number; apartmentNumber: number }[]): Promise<void> {
     for (const apartment of apartments) {
-      const apartmentLocator = this.page.getByLabel(`Этаж ${apartment.floor}, кв. ${apartment.apartmentNumber} ${apartment.priceChange}`).nth(0);
+      const apartmentLocator = this.page.getByLabel(`Этаж ${apartment.floor}, кв. ${apartment.apartmentNumber}`).nth(0); // убрал проверку цены, а этаж оставил 
       await apartmentLocator.click();
     }
   }
-
-  public async deleteApartments(): Promise<void> {
+  
+  public async deleteChoosenApartments(): Promise<void> { 
     await this.deleteButton.click();
     await this.page.waitForResponse((response) =>
-      response.url().includes('/price-recalculation/api/price-lists/') && response.url().includes('houseId')
-    );
+      response.url().includes('/price-recalculation/api/price-lists/') && response.url().includes('houseId'));
   }
 
   public async selectAllApartmentsOnPage(): Promise<void> {
